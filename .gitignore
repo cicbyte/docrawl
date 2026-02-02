@@ -35,8 +35,8 @@ package-lock.json
 yarn.lock
 *.rar
 *.temp
-参考/
 .claude/
 claude.md
 catalog*.json
 output/
+test/

@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -27,6 +29,7 @@ type Config struct {
 	Workers   int               // 并发数
 	Retries   int               // 重试次数
 	Timeout   int               // 超时时间
+	Delay     string            // 请求间等待时间，如 "20,50" 或 "20"
 	AppConfig *models.AppConfig
 }
 
@@ -51,6 +54,8 @@ type Processor struct {
 	levelPaths  map[int]string
 	// 扁平化后的目录项（保留层级信息）
 	flatItems   []*flatItem
+	// OnProgress 进度回调（title, url, completed, total, failed）
+	OnProgress func(title, url string, completed, total, failed int32, success bool)
 }
 
 // flatItem 扁平化的目录项（保留父级信息）
@@ -184,6 +189,9 @@ func (p *Processor) Execute(ctx context.Context) error {
 				zap.String("url", result.URL),
 				zap.Error(result.Error))
 		}
+		if p.OnProgress != nil {
+			p.OnProgress(result.Title, result.URL, p.progress.Completed, p.progress.Total, p.progress.Failed, result.Success)
+		}
 	}
 
 	// 9. 输出统计信息
@@ -200,8 +208,38 @@ func (p *Processor) worker(ctx context.Context, itemChan <-chan *flatItem, resul
 	defer wg.Done()
 
 	for item := range itemChan {
+		p.applyDelay()
 		result := p.fetchPage(ctx, item, selectors)
 		resultChan <- result
+	}
+}
+
+// applyDelay 根据配置应用请求间延迟
+func (p *Processor) applyDelay() {
+	delay := p.config.Delay
+	if delay == "" {
+		return
+	}
+
+	parts := strings.Split(delay, ",")
+	if len(parts) == 2 {
+		// 随机范围，如 "20,50"
+		minMs, err1 := strconv.Atoi(strings.TrimSpace(parts[0]))
+		maxMs, err2 := strconv.Atoi(strings.TrimSpace(parts[1]))
+		if err1 != nil || err2 != nil || minMs < 0 || maxMs < minMs {
+			p.logger.Warn("delay 参数格式错误，忽略", zap.String("delay", delay))
+			return
+		}
+		ms := minMs + rand.Intn(maxMs-minMs+1)
+		time.Sleep(time.Duration(ms) * time.Second)
+	} else {
+		// 固定延迟，如 "2"
+		ms, err := strconv.Atoi(strings.TrimSpace(delay))
+		if err != nil || ms < 0 {
+			p.logger.Warn("delay 参数格式错误，忽略", zap.String("delay", delay))
+			return
+		}
+		time.Sleep(time.Duration(ms) * time.Second)
 	}
 }
 
