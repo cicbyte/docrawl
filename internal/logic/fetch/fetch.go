@@ -208,9 +208,14 @@ func (p *Processor) worker(ctx context.Context, itemChan <-chan *flatItem, resul
 	defer wg.Done()
 
 	for item := range itemChan {
-		p.applyDelay()
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
 		result := p.fetchPage(ctx, item, selectors)
 		resultChan <- result
+		p.applyDelay()
 	}
 }
 

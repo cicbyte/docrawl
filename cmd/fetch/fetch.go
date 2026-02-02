@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 
 	"github.com/cicbyte/docrawl/internal/common"
 	"github.com/cicbyte/docrawl/internal/log"
@@ -115,7 +117,18 @@ func runFetch(cmd *cobra.Command, args []string) {
 	fmt.Printf("输出: %s\n", fetchOutput)
 	fmt.Printf("并发: %d\n", fetchWorkers)
 
-	if err := processor.Execute(context.Background()); err != nil {
+	// 监听 Ctrl+C 优雅退出
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-sigCh
+		fmt.Println("\n收到中断信号，正在停止...")
+		cancel()
+	}()
+
+	if err := processor.Execute(ctx); err != nil {
 		fmt.Printf("\n抓取失败: %v\n", err)
 		logger.Error("抓取失败", zap.Error(err))
 		os.Exit(1)
