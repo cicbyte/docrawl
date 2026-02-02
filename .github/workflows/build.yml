@@ -31,7 +31,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          VERSION=${{ steps.version.outputs VERSION }}
+          VERSION=${{ steps.version.outputs.VERSION }}
           COMMIT=$(git rev-parse HEAD)
           BUILD_TIME=$(date -u '+%Y-%m-%d %H:%M:%S')
           go build -ldflags "-X 'github.com/cicbyte/docrawl/cmd.Version=${VERSION}' -X 'github.com/cicbyte/docrawl/cmd.BuildTime=${BUILD_TIME}' -X 'github.com/cicbyte/docrawl/cmd.GitCommit=${COMMIT}' -X 'github.com/cicbyte/docrawl/cmd.GitBranch=${GITHUB_REF_NAME}'" -o docrawl.exe
