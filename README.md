@@ -25,6 +25,10 @@ docrawl 是一个 CLI 工具，可以将任意文档网站（VitePress、Docusau
 ### 安装
 
 ```bash
+# go install（注意：版本信息为默认值 dev）
+go install github.com/cicbyte/docrawl@latest
+
+# 从源码编译
 git clone https://github.com/cicbyte/docrawl.git
 cd docrawl
 go mod download
