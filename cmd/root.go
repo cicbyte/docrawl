@@ -18,6 +18,14 @@ import (
 	"go.uber.org/zap"
 )
 
+// 构建时通过 -ldflags 注入
+var (
+	Version   = "dev"
+	BuildTime = "unknown"
+	GitCommit = "unknown"
+	GitBranch = "unknown"
+)
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "docrawl",
@@ -35,6 +43,11 @@ var rootCmd = &cobra.Command{
   docrawl fetch -i catalog.json -o ./output       # 抓取内容
 
 更多信息请访问: https://github.com/cicbyte/docrawl`,
+}
+
+func init() {
+	rootCmd.SetVersionTemplate("{{.Version}}\n")
+	rootCmd.Version = fmt.Sprintf("docrawl %s (%s) %s/%s", Version, BuildTime, GitBranch, GitCommit[:7])
 }
 
 func Execute() {
