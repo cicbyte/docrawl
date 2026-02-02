@@ -40,3 +40,14 @@ jobs:
         with:
           name: docrawl-windows-amd64
           path: docrawl.exe
+
+      - name: Generate checksum
+        shell: bash
+        run: sha256sum docrawl.exe > docrawl.exe.sha256
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            docrawl.exe
+            docrawl.exe.sha256
