@@ -17,12 +17,12 @@ import (
 
 var (
 	// 命令参数
-	fetchInput     string
-	fetchOutput    string
-	fetchWorkers   int
-	fetchRetries   int
-	fetchTimeout   int
-	fetchDelay     string
+	fetchInput   string
+	fetchOutput  string
+	fetchWorkers int
+	fetchRetries int
+	fetchTimeout int
+	fetchDelay   string
 )
 
 // GetCommand 获取fetch命令

@@ -177,7 +177,7 @@ func (p *MarkdownProcessor) cleanMarkdown(content string) string {
 // countWords 计算字数
 func (p *MarkdownProcessor) countWords(text string) int {
 	// 移除Markdown标记
-	text = regexp.MustCompile(`[#*_\[\]()>` + "`" + `~-]`).ReplaceAllString(text, "")
+	text = regexp.MustCompile(`[#*_\[\]()>`+"`"+`~-]`).ReplaceAllString(text, "")
 	text = regexp.MustCompile(`\n+`).ReplaceAllString(text, " ")
 	text = strings.TrimSpace(text)
 

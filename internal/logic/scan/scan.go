@@ -33,11 +33,11 @@ type Config struct {
 
 // Processor scan处理器
 type Processor struct {
-	config       *Config
-	renderer     renderer.Renderer
-	mdProcessor  *processor.MarkdownProcessor
-	aiClient     *utils.AIClient
-	logger       *zap.Logger
+	config      *Config
+	renderer    renderer.Renderer
+	mdProcessor *processor.MarkdownProcessor
+	aiClient    *utils.AIClient
+	logger      *zap.Logger
 }
 
 // NewProcessor 创建scan处理器
@@ -77,20 +77,20 @@ type CatalogItem struct {
 
 // CatalogConfig 目录配置
 type CatalogConfig struct {
-	Site        string        `json:"site"`
-	URL         string        `json:"url"`
-	Selectors   Selectors     `json:"selectors"`
+	Site        string         `json:"site"`
+	URL         string         `json:"url"`
+	Selectors   Selectors      `json:"selectors"`
 	Items       []*CatalogItem `json:"items"`
-	AIGenerated bool          `json:"ai_generated"`
-	Confidence  float64       `json:"confidence"`
-	ScannedAt   string        `json:"scanned_at"`
+	AIGenerated bool           `json:"ai_generated"`
+	Confidence  float64        `json:"confidence"`
+	ScannedAt   string         `json:"scanned_at"`
 }
 
 // Selectors 选择器配置
 type Selectors struct {
-	TOC         string `json:"toc"`                   // 目录选择器
-	Content     string `json:"content"`               // 内容选择器
-	TOCType     string `json:"toc_type,omitempty"`    // 目录选择器类型: css/xpath
+	TOC         string `json:"toc"`                    // 目录选择器
+	Content     string `json:"content"`                // 内容选择器
+	TOCType     string `json:"toc_type,omitempty"`     // 目录选择器类型: css/xpath
 	ContentType string `json:"content_type,omitempty"` // 内容选择器类型: css/xpath
 }
 

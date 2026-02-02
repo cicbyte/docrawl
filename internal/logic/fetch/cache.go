@@ -13,8 +13,8 @@ import (
 
 // CacheManager HTML缓存管理器
 type CacheManager struct {
-	cacheDir string    // 缓存目录
-	metaFile string    // 元数据文件
+	cacheDir string // 缓存目录
+	metaFile string // 元数据文件
 	mu       sync.RWMutex
 	meta     *CacheMeta // 内存中的元数据
 }
