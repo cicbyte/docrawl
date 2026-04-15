@@ -4,9 +4,8 @@ package models
 type AppConfig struct {
 	Version string `yaml:"version"` // 版本号，用于升级时判断
 	AI      AIConfig `yaml:"ai"`
-	Database DatabaseConfig `yaml:"database"`
-	Log      LogConfig `yaml:"log"`
-	Crawler  CrawlerConfig `yaml:"crawler"`
+	Log     LogConfig `yaml:"log"`
+	Crawler CrawlerConfig `yaml:"crawler"`
 }
 
 // AIConfig AI配置
@@ -18,16 +17,6 @@ type AIConfig struct {
 	MaxTokens   int     `yaml:"max_tokens"`  // 最大token数
 	Temperature float64 `yaml:"temperature"` // 温度参数
 	Timeout     int     `yaml:"timeout"`     // 请求超时（秒）
-}
-
-// DatabaseConfig 数据库配置
-type DatabaseConfig struct {
-	Type     string `yaml:"type"`     // sqlite/mysql
-	Host     string `yaml:"host"`     // 主机地址
-	Port     int    `yaml:"port"`     // 端口
-	User     string `yaml:"user"`     // 用户名
-	Password string `yaml:"password"` // 密码
-	DbName   string `yaml:"db_name"`  // 数据库名
 }
 
 // LogConfig 日志配置

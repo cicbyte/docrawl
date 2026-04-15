@@ -152,14 +152,6 @@ func GetDefaultConfig() *models.AppConfig {
 	config.AI.Temperature = 0.8
 	config.AI.Timeout = 30
 
-	// 数据库默认配置
-	config.Database.Type = "sqlite"
-	config.Database.DbName = "app"
-	config.Database.Host = "localhost"
-	config.Database.Port = 3306
-	config.Database.User = "root"
-	config.Database.Password = "123456"
-
 	// 日志默认配置
 	config.Log.Level = "info"
 	config.Log.MaxSize = 10
