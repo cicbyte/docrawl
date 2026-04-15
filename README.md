@@ -18,6 +18,7 @@ docrawl 是一个 CLI 工具，可以将任意文档网站（VitePress、Docusau
 ### 前置要求
 
 - Go 1.24+
+- Windows 10/11（当前仅在 Windows 平台做开发测试，Linux 和 macOS 未做可用性验证）
 - Chrome/Chromium 浏览器（用于页面渲染）
 - AI API 密钥（可选，用于 AI 辅助分析，默认使用智谱 AI GLM-4-Flash）
 
