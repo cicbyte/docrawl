@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/cicbyte/docrawl/internal/common"
 	"github.com/cicbyte/docrawl/internal/log"
@@ -14,11 +15,12 @@ import (
 
 var (
 	// 命令参数
-	fetchInput   string
-	fetchOutput  string
-	fetchWorkers int
-	fetchRetries int
-	fetchTimeout int
+	fetchInput     string
+	fetchOutput    string
+	fetchWorkers   int
+	fetchRetries   int
+	fetchTimeout   int
+	fetchDelay     string
 )
 
 // GetCommand 获取fetch命令
@@ -57,6 +59,7 @@ HTML缓存:
 	cmd.Flags().IntVarP(&fetchWorkers, "workers", "w", 3, "并发数（1-10）")
 	cmd.Flags().IntVarP(&fetchRetries, "retries", "r", 3, "重试次数")
 	cmd.Flags().IntVarP(&fetchTimeout, "timeout", "t", 60, "页面加载超时时间(秒)")
+	cmd.Flags().StringVarP(&fetchDelay, "delay", "d", "", "请求间随机等待时间(秒)，如 1,3 表示1~3秒随机，仅输入2表示固定等待2秒")
 
 	// 标记必需参数
 	cmd.MarkFlagRequired("input")
@@ -67,7 +70,7 @@ HTML缓存:
 func runFetch(cmd *cobra.Command, args []string) {
 	// 验证参数
 	if err := validateParams(); err != nil {
-		fmt.Printf("❌ 参数验证失败: %v\n", err)
+		fmt.Printf("参数验证失败: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -78,6 +81,7 @@ func runFetch(cmd *cobra.Command, args []string) {
 		Workers:   fetchWorkers,
 		Retries:   fetchRetries,
 		Timeout:   fetchTimeout,
+		Delay:     fetchDelay,
 		AppConfig: common.AppConfigModel,
 	}
 
@@ -85,19 +89,34 @@ func runFetch(cmd *cobra.Command, args []string) {
 	logger := log.GetLogger()
 	processor, err := fetch.NewProcessor(config, logger)
 	if err != nil {
-		fmt.Printf("❌ 创建处理器失败: %v\n", err)
+		fmt.Printf("创建处理器失败: %v\n", err)
 		os.Exit(1)
 	}
 
-	// 执行抓取
-	fmt.Printf("🚀 开始抓取\n")
-	fmt.Printf("📄 输入: %s\n", fetchInput)
-	fmt.Printf("📁 输出: %s\n", fetchOutput)
-	fmt.Printf("🔧 并发: %d\n", fetchWorkers)
-	fmt.Println()
+	// 设置进度回调
+	processor.OnProgress = func(title, url string, completed, total, failed int32, success bool) {
+		percent := float64(completed) / float64(total) * 100
+		bar := renderBar(int(percent), 20)
+		status := "OK"
+		if !success {
+			status = "FAIL"
+		}
+
+		// 截断过长的标题
+		if len(title) > 40 {
+			title = title[:37] + "..."
+		}
+
+		fmt.Printf("\r%s [%5.1f%%] %d/%d | %-4s | %s",
+			bar, percent, completed, total, status, title)
+	}
+
+	fmt.Printf("输入: %s\n", fetchInput)
+	fmt.Printf("输出: %s\n", fetchOutput)
+	fmt.Printf("并发: %d\n", fetchWorkers)
 
 	if err := processor.Execute(context.Background()); err != nil {
-		fmt.Printf("❌ 抓取失败: %v\n", err)
+		fmt.Printf("\n抓取失败: %v\n", err)
 		logger.Error("抓取失败", zap.Error(err))
 		os.Exit(1)
 	}
@@ -105,13 +124,19 @@ func runFetch(cmd *cobra.Command, args []string) {
 	// 输出统计
 	progress := processor.GetProgress()
 	fmt.Println()
-	fmt.Println("✅ 抓取完成!")
-	fmt.Printf("📊 总计: %d 页\n", progress.Total)
-	fmt.Printf("✅ 成功: %d 页\n", progress.Completed)
+	fmt.Println("抓取完成!")
+	fmt.Printf("总计: %d 页  成功: %d 页", progress.Total, progress.Completed)
 	if progress.Failed > 0 {
-		fmt.Printf("❌ 失败: %d 页\n", progress.Failed)
+		fmt.Printf("  失败: %d 页", progress.Failed)
 	}
-	fmt.Printf("📁 输出目录: %s\n", fetchOutput)
+	fmt.Println()
+	fmt.Printf("输出目录: %s\n", fetchOutput)
+}
+
+// renderBar 渲染进度条
+func renderBar(percent, width int) string {
+	filled := width * percent / 100
+	return "[" + strings.Repeat("#", filled) + strings.Repeat("-", width-filled) + "]"
 }
 
 // validateParams 验证参数
