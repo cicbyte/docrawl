@@ -40,3 +40,4 @@ claude.md
 catalog*.json
 output/
 test/
+.reference/
