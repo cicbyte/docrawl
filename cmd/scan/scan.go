@@ -16,12 +16,12 @@ import (
 
 var (
 	// 命令参数
-	scanURL        string
-	scanOutput     string
-	scanAI         bool
-	scanHeadless   bool
-	scanTimeout    int
-	scanExpand     bool
+	scanURL         string
+	scanOutput      string
+	scanAI          bool
+	scanHeadless    bool
+	scanTimeout     int
+	scanExpand      bool
 	scanInteractive bool
 )
 

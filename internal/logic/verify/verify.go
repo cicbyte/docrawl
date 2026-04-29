@@ -18,12 +18,12 @@ import (
 
 // Config verify命令配置
 type Config struct {
-	URL       string          // 要验证的URL
-	Selector  string          // 正文选择器
-	Type      string          // 选择器类型: css/xpath
-	Catalog   string          // catalog.json路径
-	Output    string          // 输出目录（用于缓存）
-	Save      bool            // 是否保存到catalog
+	URL       string // 要验证的URL
+	Selector  string // 正文选择器
+	Type      string // 选择器类型: css/xpath
+	Catalog   string // catalog.json路径
+	Output    string // 输出目录（用于缓存）
+	Save      bool   // 是否保存到catalog
 	AppConfig *models.AppConfig
 }
 
@@ -40,13 +40,13 @@ type Result struct {
 
 // CatalogConfig 目录配置（与fetch模块共享结构）
 type CatalogConfig struct {
-	Site        string        `json:"site"`
-	URL         string        `json:"url"`
-	Selectors   Selectors     `json:"selectors"`
+	Site        string         `json:"site"`
+	URL         string         `json:"url"`
+	Selectors   Selectors      `json:"selectors"`
 	Items       []*CatalogItem `json:"items"`
-	AIGenerated bool          `json:"ai_generated"`
-	Confidence  float64       `json:"confidence"`
-	ScannedAt   string        `json:"scanned_at"`
+	AIGenerated bool           `json:"ai_generated"`
+	Confidence  float64        `json:"confidence"`
+	ScannedAt   string         `json:"scanned_at"`
 }
 
 // Selectors 选择器配置

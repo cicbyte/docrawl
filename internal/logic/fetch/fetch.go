@@ -24,12 +24,12 @@ import (
 
 // Config fetch命令配置
 type Config struct {
-	Input     string            // catalog.json路径
-	Output    string            // 输出目录
-	Workers   int               // 并发数
-	Retries   int               // 重试次数
-	Timeout   int               // 超时时间
-	Delay     string            // 请求间等待时间，如 "20,50" 或 "20"
+	Input     string // catalog.json路径
+	Output    string // 输出目录
+	Workers   int    // 并发数
+	Retries   int    // 重试次数
+	Timeout   int    // 超时时间
+	Delay     string // 请求间等待时间，如 "20,50" 或 "20"
 	AppConfig *models.AppConfig
 }
 
@@ -51,9 +51,9 @@ type Processor struct {
 	logger      *zap.Logger
 	mu          sync.Mutex
 	// 层级目录缓存：level -> 目录路径
-	levelPaths  map[int]string
+	levelPaths map[int]string
 	// 扁平化后的目录项（保留层级信息）
-	flatItems   []*flatItem
+	flatItems []*flatItem
 	// OnProgress 进度回调（title, url, completed, total, failed）
 	OnProgress func(title, url string, completed, total, failed int32, success bool)
 }
@@ -84,7 +84,7 @@ type CatalogConfig struct {
 type Selectors struct {
 	TOC         string `json:"toc"`
 	Content     string `json:"content"`
-	TOCType     string `json:"toc_type,omitempty"`    // 目录选择器类型: css/xpath
+	TOCType     string `json:"toc_type,omitempty"`     // 目录选择器类型: css/xpath
 	ContentType string `json:"content_type,omitempty"` // 内容选择器类型: css/xpath
 }
 

@@ -2,9 +2,9 @@ package models
 
 // AppConfig 应用配置结构
 type AppConfig struct {
-	Version string `yaml:"version"` // 版本号，用于升级时判断
-	AI      AIConfig `yaml:"ai"`
-	Log     LogConfig `yaml:"log"`
+	Version string        `yaml:"version"` // 版本号，用于升级时判断
+	AI      AIConfig      `yaml:"ai"`
+	Log     LogConfig     `yaml:"log"`
 	Crawler CrawlerConfig `yaml:"crawler"`
 }
 
@@ -45,8 +45,8 @@ type CrawlerConfig struct {
 	ChromeDP ChromeDPConfig `yaml:"chromedp"`
 
 	// 输出设置
-	SaveRawHTML  bool `yaml:"save_raw_html"`  // 是否保存原始HTML
-	IncludeMeta  bool `yaml:"include_meta"`   // 是否包含元数据
+	SaveRawHTML bool `yaml:"save_raw_html"` // 是否保存原始HTML
+	IncludeMeta bool `yaml:"include_meta"`  // 是否包含元数据
 }
 
 // ChromeDPConfig ChromeDP配置
@@ -58,17 +58,17 @@ type ChromeDPConfig struct {
 	ChromePath string `yaml:"chrome_path"` // Chrome可执行文件路径
 
 	// 调试设置
-	DebugPort    int    `yaml:"debug_port"`     // 调试端口
+	DebugPort      int    `yaml:"debug_port"`       // 调试端口
 	RemoteDebugURL string `yaml:"remote_debug_url"` // 远程调试URL
-	ReuseBrowser bool   `yaml:"reuse_browser"` // 是否复用浏览器
-	KeepBrowser  bool   `yaml:"keep_browser"`  // 是否保持浏览器
+	ReuseBrowser   bool   `yaml:"reuse_browser"`    // 是否复用浏览器
+	KeepBrowser    bool   `yaml:"keep_browser"`     // 是否保持浏览器
 
 	// 用户数据
 	UserDataDir string `yaml:"user_data_dir"` // 用户数据目录
 	Profile     string `yaml:"profile"`       // 配置文件名
 
 	// 网络设置
-	Proxy    string `yaml:"proxy"`     // 代理服务器
+	Proxy     string `yaml:"proxy"`      // 代理服务器
 	UserAgent string `yaml:"user_agent"` // 用户代理
 
 	// 窗口设置
@@ -80,9 +80,9 @@ type ChromeDPConfig struct {
 	WaitDelay   int `yaml:"wait_delay"`   // 额外等待时间（秒）
 
 	// 安全设置
-	NoSandbox      bool `yaml:"no_sandbox"`       // 禁用沙箱
-	DisableGpu     bool `yaml:"disable_gpu"`      // 禁用GPU
-	DisableDevShm  bool `yaml:"disable_dev_shm"`  // 禁用/dev/shm
-	DisableWebSec  bool `yaml:"disable_web_sec"`  // 禁用Web安全
+	NoSandbox       bool   `yaml:"no_sandbox"`       // 禁用沙箱
+	DisableGpu      bool   `yaml:"disable_gpu"`      // 禁用GPU
+	DisableDevShm   bool   `yaml:"disable_dev_shm"`  // 禁用/dev/shm
+	DisableWebSec   bool   `yaml:"disable_web_sec"`  // 禁用Web安全
 	DisableFeatures string `yaml:"disable_features"` // 禁用的特性
 }
